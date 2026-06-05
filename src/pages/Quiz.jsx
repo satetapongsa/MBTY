@@ -10,7 +10,7 @@ export default function Quiz() {
 
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [score, setScore] = useState(50);
+  const [score, setScore] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleNext = async () => {
@@ -20,7 +20,7 @@ export default function Quiz() {
 
     if (currentQ < questions.length - 1) {
       setCurrentQ(currentQ + 1);
-      setScore(50); // reset slider
+      setScore(null); // reset bubble
     } else {
       // Submit
       setIsSubmitting(true);
@@ -80,26 +80,59 @@ export default function Quiz() {
           {questions[currentQ].text}
         </h3>
         
-        <div style={{ marginBottom: '3rem' }}>
-          <input 
-            type="range" 
-            min="0" max="100" 
-            value={score} 
-            onChange={e => setScore(Number(e.target.value))}
-            style={{ width: '100%', accentColor: 'var(--color-naturalist)' }}
-          />
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', color: 'var(--text-muted)' }}>
-            <span>น้อยมาก (0)</span>
-            <span style={{ color: 'white', fontWeight: 'bold', fontSize: '1.2rem' }}>{score}%</span>
-            <span>มากที่สุด (100)</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '3rem', width: '100%', gap: '1rem' }}>
+          <span style={{ color: '#2ecc71', fontWeight: 'bold', fontSize: '1rem', whiteSpace: 'nowrap' }}>เห็นด้วย</span>
+          
+          <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', justifyContent: 'center' }}>
+            {[
+              { value: 100, color: '#2ecc71', size: 56 },
+              { value: 80, color: '#2ecc71', size: 46 },
+              { value: 60, color: '#2ecc71', size: 36 },
+              { value: 50, color: '#95a5a6', size: 30 },
+              { value: 40, color: '#9b59b6', size: 36 },
+              { value: 20, color: '#9b59b6', size: 46 },
+              { value: 0, color: '#9b59b6', size: 56 },
+            ].map((opt, i) => {
+              const isSelected = score === opt.value;
+              return (
+                <div 
+                  key={i} 
+                  onClick={() => setScore(opt.value)}
+                  style={{ 
+                    width: `${opt.size}px`, 
+                    height: `${opt.size}px`, 
+                    borderRadius: '50%', 
+                    border: `3px solid ${opt.color}`,
+                    backgroundColor: isSelected ? opt.color : 'transparent',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.2s ease',
+                    boxShadow: isSelected ? `0 0 15px ${opt.color}60` : 'none'
+                  }}
+                >
+                  {isSelected && <span style={{ color: 'white', fontSize: `${opt.size * 0.5}px`, lineHeight: 1 }}>✓</span>}
+                </div>
+              )
+            })}
           </div>
+
+          <span style={{ color: '#9b59b6', fontWeight: 'bold', fontSize: '1rem', whiteSpace: 'nowrap' }}>ไม่เห็นด้วย</span>
         </div>
 
         <button 
           onClick={handleNext} 
-          disabled={isSubmitting}
+          disabled={isSubmitting || score === null}
           className="upgrade-btn" 
-          style={{ padding: '12px 32px', fontSize: '1.2rem', background: '#3498db', color: 'white' }}
+          style={{ 
+            padding: '12px 32px', 
+            fontSize: '1.2rem', 
+            background: score === null ? '#555' : '#3498db', 
+            color: 'white',
+            cursor: score === null ? 'not-allowed' : 'pointer',
+            opacity: score === null ? 0.5 : 1
+          }}
         >
           {isSubmitting ? 'กำลังประมวลผล...' : (currentQ === questions.length - 1 ? 'ดูผลลัพธ์' : 'ข้อต่อไป')}
         </button>
