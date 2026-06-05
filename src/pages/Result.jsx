@@ -69,7 +69,7 @@ export default function Result() {
     if (!cardRef.current) return;
     try {
       const canvas = await html2canvas(cardRef.current, { 
-        backgroundColor: '#131620',
+        backgroundColor: '#0b0d14',
         scale: 2 // High quality
       });
       const dataUrl = canvas.toDataURL('image/png');
@@ -84,67 +84,209 @@ export default function Result() {
 
   return (
     <>
-      {/* Hidden container for Horizontal Export */}
+      {/* Hidden container for 16:9 Full Infographic Export */}
       <div style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
-        <div ref={cardRef} style={{ width: '1200px', display: 'flex', gap: '2rem', background: '#0b0d14', padding: '3rem', borderRadius: '24px' }}>
-          {/* Left: Character Card */}
-          <div style={{ ...cardStyle, flex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <h2 style={{ color: 'white', marginBottom: '1.5rem', fontSize: '1.2rem', letterSpacing: '2px', background: 'rgba(255,255,255,0.1)', padding: '5px 15px', borderRadius: '20px' }}>MBTY RESULT</h2>
-            <img src={character.image} alt={character.name} style={{ width: '250px', height: '250px', objectFit: 'cover', borderRadius: '16px', marginBottom: '1.5rem', border: '2px solid #2ecc71' }} />
-            <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>คุณคือ</div>
-            <h2 style={{ color: '#2ecc71', fontSize: '2rem', marginBottom: '1rem' }}>{character.name}</h2>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>{character.desc}</p>
+        <div ref={cardRef} style={{ width: '1920px', height: '1080px', display: 'flex', gap: '2.5rem', background: '#0b0d14', padding: '3.5rem', boxSizing: 'border-box', position: 'relative' }}>
+          
+          {/* Watermark */}
+          <div style={{ position: 'absolute', bottom: '1.5rem', right: '3.5rem', color: 'rgba(255,255,255,0.2)', fontSize: '1.2rem', letterSpacing: '2px', fontWeight: 'bold' }}>
+            MBTY.VERCEL.APP
+          </div>
+
+          {/* Col 1: Character Identity */}
+          <div style={{ ...cardStyle, width: '480px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '2.5rem' }}>
+            <h2 style={{ color: 'white', fontSize: '1.2rem', letterSpacing: '2px', background: 'rgba(255,255,255,0.1)', padding: '8px 20px', borderRadius: '20px' }}>MBTY RESULT</h2>
+            <img src={character.image} alt={character.name} style={{ width: '280px', height: '280px', objectFit: 'cover', borderRadius: '20px', border: '3px solid #2ecc71', boxShadow: '0 10px 30px rgba(46, 204, 113, 0.3)' }} />
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: '1rem', marginBottom: '0.5rem' }}>คุณคือ</div>
+              <h2 style={{ color: '#2ecc71', fontSize: '2.5rem', marginBottom: '1rem', lineHeight: '1.2' }}>{character.name}</h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>{character.desc}</p>
+            </div>
+            
             <div style={{ display: 'flex', gap: '1rem', width: '100%', justifyContent: 'center' }}>
               {topSkills.map((skill, index) => (
-                <div key={`exp-${skill.id}`} style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', flex: 1, border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{skill.icon}</div>
-                  <div style={{ fontSize: '0.8rem', color: skill.color, marginBottom: '0.5rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{skill.name.replace('ด้าน','')}</div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: skill.color }}>{skill.score}%</div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>อันดับ {index + 1}</div>
+                <div key={`exp-${skill.id}`} style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', flex: 1, border: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '1.8rem', marginBottom: '0.5rem' }}>{skill.icon}</div>
+                  <div style={{ fontSize: '0.9rem', color: skill.color, marginBottom: '0.5rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{skill.name.replace('ด้าน','')}</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: skill.color }}>{skill.score}%</div>
                 </div>
               ))}
             </div>
-          </div>
 
-          {/* Right: Skills & Donut */}
-          <div style={{ ...cardStyle, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <h3 style={{ color: 'var(--text-muted)', marginBottom: '3rem', letterSpacing: '2px' }}>สัดส่วนพหุปัญญา 8 ด้าน</h3>
-            <div className="donut-chart" style={{ background: `conic-gradient(${conicStops})`, width: '250px', height: '250px', marginBottom: '2rem' }}>
-              <div className="donut-inner" style={{ width: '130px', height: '130px' }}>
-                <div className="donut-inner-text">พหุปัญญา</div>
-                <div className="donut-inner-sub">8 ด้าน</div>
+            <div className="donut-chart" style={{ background: `conic-gradient(${conicStops})`, width: '280px', height: '280px', margin: '1rem auto 0' }}>
+              <div className="donut-inner" style={{ width: '150px', height: '150px' }}>
+                <div className="donut-inner-text" style={{ fontSize: '1rem' }}>พหุปัญญา</div>
+                <div className="donut-inner-sub" style={{ fontSize: '1.5rem' }}>8 ด้าน</div>
               </div>
               {skills.map((skill) => {
                  const startPercent = skills.slice(0, skills.indexOf(skill)).reduce((sum, s) => sum + (s.score / totalScore) * 100, 0);
                  const percent = (skill.score / totalScore) * 100;
                  const middlePercent = startPercent + (percent / 2);
                  const angle = (middlePercent / 100) * 360;
-                 const radius = 95;
+                 const radius = 105;
                  const radians = (angle - 90) * (Math.PI / 180);
                  const x = Math.cos(radians) * radius;
                  const y = Math.sin(radians) * radius;
                  return (
-                   <div key={`label-exp-${skill.id}`} style={{ position: 'absolute', transform: `translate(${x}px, ${y}px)`, color: 'white', fontSize: '11px', display: 'flex', flexDirection: 'column', alignItems: 'center', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>
-                     <span>{skill.icon}</span>
+                   <div key={`label-exp-${skill.id}`} style={{ position: 'absolute', transform: `translate(${x}px, ${y}px)`, color: 'white', fontSize: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
+                     <span style={{ fontSize: '1.2rem' }}>{skill.icon}</span>
                      <span style={{ fontWeight: 'bold' }}>{Math.round(percent)}%</span>
                    </div>
                  )
               })}
             </div>
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-              {skills.map(skill => (
-                <div key={`bar-exp-${skill.id}`} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <span style={{ width: '140px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
-                    <span style={{ fontSize: '1.1rem' }}>{skill.icon}</span> {skill.name}
-                  </span>
-                  <div style={{ flex: 1, height: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '5px', overflow: 'hidden' }}>
-                    <div style={{ width: `${skill.score}%`, backgroundColor: skill.color, height: '100%', borderRadius: '5px' }} />
+          </div>
+
+          {/* Col 2: Deep Dive & Strengths */}
+          <div style={{ width: '630px', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            {/* 8 Skills Bars */}
+            <div style={{ ...cardStyle, flexShrink: 0, padding: '2rem 2.5rem' }}>
+              <h3 style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', letterSpacing: '2px', fontSize: '1.2rem' }}>สัดส่วนทักษะทั้ง 8 ด้าน</h3>
+              <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                {skills.map(skill => (
+                  <div key={`bar-exp-${skill.id}`} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <span style={{ width: '180px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '1.1rem' }}>
+                      <span style={{ fontSize: '1.3rem' }}>{skill.icon}</span> {skill.name}
+                    </span>
+                    <div style={{ flex: 1, height: '14px', background: 'rgba(255,255,255,0.05)', borderRadius: '7px', overflow: 'hidden' }}>
+                      <div style={{ width: `${skill.score}%`, backgroundColor: skill.color, height: '100%', borderRadius: '7px' }} />
+                    </div>
+                    <span style={{ width: '45px', textAlign: 'right', color: skill.color, fontWeight: 'bold', fontSize: '1.1rem' }}>{skill.score}</span>
                   </div>
-                  <span style={{ width: '30px', textAlign: 'right', color: skill.color, fontWeight: 'bold', fontSize: '0.9rem' }}>{skill.score}</span>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+
+            {/* Personality */}
+            <div style={{ ...cardStyle, background: 'linear-gradient(145deg, #16192b, #121420)', flexShrink: 0 }}>
+              <h3 style={{ color: '#9b59b6', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '1.3rem' }}>
+                <span>🧩</span> บุคลิกภาพของคุณ
+              </h3>
+              <p style={{ color: 'var(--text-main)', lineHeight: '1.7', fontSize: '1.1rem' }}>{character.personality}</p>
+            </div>
+
+            {/* Strengths & Careers */}
+            <div style={{ display: 'flex', gap: '2rem', flex: 1 }}>
+              <div style={{ ...cardStyle, flex: 1, background: 'linear-gradient(145deg, #0d211c, #0b1814)', border: '1px solid rgba(46, 204, 113, 0.2)' }}>
+                <h3 style={{ color: '#2ecc71', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '1.3rem' }}>
+                  <span>💪</span> จุดแข็งของคุณ
+                </h3>
+                <ul style={{ color: 'var(--text-main)', lineHeight: '1.7', paddingLeft: '1.5rem', fontSize: '1.05rem', margin: 0 }}>
+                  {(character.strengths).map((str, i) => (
+                    <li key={i} style={{ marginBottom: '0.5rem' }}>{str}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
+
+          {/* Col 3: Growth & Frameworks */}
+          <div style={{ width: '630px', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            
+            {/* Careers */}
+            <div style={{ ...cardStyle, flexShrink: 0 }}>
+              <h3 style={{ color: '#3498db', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '1.3rem' }}>
+                <span>💼</span> อาชีพที่เหมาะ
+              </h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
+                {(character.careers).map((career, i) => (
+                  <span key={i} style={{ background: 'rgba(52, 152, 219, 0.1)', color: '#3498db', padding: '0.6rem 1.2rem', borderRadius: '20px', fontSize: '1.05rem', border: '1px solid rgba(52, 152, 219, 0.3)' }}>
+                    {career}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Learning Styles */}
+            <div style={{ ...cardStyle, background: 'linear-gradient(145deg, #1a1625, #13111a)', flexShrink: 0 }}>
+              <h3 style={{ color: '#9b59b6', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '1.3rem' }}>
+                <span>📚</span> คำแนะนำการเรียนรู้
+              </h3>
+              <ul style={{ color: 'var(--text-main)', lineHeight: '1.7', paddingLeft: '1.5rem', fontSize: '1.05rem', margin: 0 }}>
+                {(character.learning_style).map((item, i) => (
+                  <li key={i} style={{ color: '#d2b4de', marginBottom: '0.5rem' }}><span style={{ color: 'var(--text-main)' }}>{item}</span></li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Improvements */}
+            <div style={{ ...cardStyle, background: 'linear-gradient(145deg, #2a1616, #1c0f0f)', border: '1px solid rgba(231, 76, 60, 0.2)', flexShrink: 0 }}>
+              <h3 style={{ color: '#e74c3c', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '1.3rem' }}>
+                <span>🌱</span> ด้านที่ควรพัฒนา
+              </h3>
+              <ol style={{ color: 'var(--text-main)', lineHeight: '1.7', paddingLeft: '1.5rem', fontSize: '1.05rem', margin: 0 }}>
+                {(character.improvements).map((item, i) => (
+                  <li key={i} style={{ color: '#f5b7b1', fontWeight: 'bold', marginBottom: '0.5rem' }}><span style={{ color: 'var(--text-main)', fontWeight: 'normal' }}>{item}</span></li>
+                ))}
+              </ol>
+            </div>
+
+            {/* MBTI & Enneagram */}
+            <div style={{ display: 'flex', gap: '2rem', flex: 1 }}>
+              <div style={{ ...cardStyle, flex: 1, padding: '2rem 1.5rem' }}>
+                <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', letterSpacing: '1px', marginBottom: '1.5rem', textTransform: 'uppercase' }}>16Personalities</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                  {[
+                    { left: 'E', right: 'I', leftScore: Math.min(100, Math.max(0, skills[5].score + 10)) },
+                    { left: 'S', right: 'N', leftScore: Math.min(100, Math.max(0, skills[1].score + 5)) },
+                    { left: 'T', right: 'F', leftScore: Math.min(100, Math.max(0, skills[7].score + 15)) },
+                    { left: 'J', right: 'P', leftScore: Math.min(100, Math.max(0, skills[0].score + 5)) },
+                  ].map((dim, i) => {
+                    const isLeftDom = dim.leftScore >= 50;
+                    const domScore = isLeftDom ? dim.leftScore : 100 - dim.leftScore;
+                    return (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                        <span style={{ width: '20px', fontWeight: 'bold', color: isLeftDom ? '#8c52ff' : '#555', textAlign: 'center', fontSize: '1.1rem' }}>{dim.left}</span>
+                        <div style={{ flex: 1, height: '8px', background: '#222', borderRadius: '4px', display: 'flex', overflow: 'hidden' }}>
+                          {isLeftDom ? (
+                            <>
+                              <div style={{ width: `${dim.leftScore}%`, background: '#8c52ff', height: '100%' }} />
+                              <div style={{ flex: 1, background: '#222' }} />
+                            </>
+                          ) : (
+                            <>
+                              <div style={{ width: `${dim.leftScore}%`, background: '#222', height: '100%' }} />
+                              <div style={{ flex: 1, background: '#8c52ff' }} />
+                            </>
+                          )}
+                        </div>
+                        <span style={{ width: '20px', fontWeight: 'bold', color: !isLeftDom ? '#8c52ff' : '#555', textAlign: 'center', fontSize: '1.1rem' }}>{dim.right}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div style={{ ...cardStyle, flex: 1.5, padding: '2rem 1.5rem' }}>
+                <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', letterSpacing: '1px', marginBottom: '1.5rem', textTransform: 'uppercase' }}>Enneagram</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                  {[
+                    { id: 1, name: 'ผู้ชอบความสมบูรณ์แบบ', score: Math.min(100, Math.floor((skills[7].score + skills[0].score) / 2)) },
+                    { id: 2, name: 'ผู้ให้', score: Math.min(100, Math.floor((skills[5].score + skills[2].score) / 2)) },
+                    { id: 3, name: 'ผู้ไขว่คว้า', score: Math.min(100, Math.max(0, skills[1].score + 10)) },
+                    { id: 4, name: 'ศิลปิน', score: Math.min(100, Math.floor((skills[3].score + skills[6].score) / 2)) },
+                    { id: 5, name: 'นักสำรวจ', score: Math.min(100, Math.max(0, skills[0].score + 5)) },
+                    { id: 6, name: 'ผู้จงรักภักดี', score: Math.min(100, Math.floor((skills[5].score + skills[7].score) / 2)) },
+                    { id: 7, name: 'นักผจญภัย', score: Math.min(100, Math.max(0, skills[1].score + 15)) },
+                    { id: 8, name: 'ผู้นำ', score: Math.min(100, Math.max(0, skills[5].score + 20)) },
+                    { id: 9, name: 'ผู้รักสันติ', score: Math.min(100, Math.floor((skills[2].score + skills[0].score) / 2)) },
+                  ].map(enn => (
+                    <div key={enn.id} style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                      <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#1a1d2d', color: '#8b92a5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 'bold', border: '1px solid #333', flexShrink: 0 }}>
+                        {enn.id}
+                      </div>
+                      <span style={{ width: '130px', color: '#8b92a5', fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{enn.name}</span>
+                      <div style={{ flex: 1, height: '6px', background: '#222', borderRadius: '3px', overflow: 'hidden' }}>
+                        <div style={{ width: `${enn.score}%`, background: '#4a4d5e', height: '100%', borderRadius: '3px' }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+          </div>
+
         </div>
       </div>
 
