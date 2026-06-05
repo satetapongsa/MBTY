@@ -163,7 +163,7 @@ export default function Quiz() {
         <button 
           onClick={handleBack}
           style={{ 
-            position: 'absolute', top: '1.5rem', left: '1.5rem', 
+            position: 'absolute', bottom: '1.5rem', left: '1.5rem', 
             background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', 
             borderRadius: '50px', padding: '8px 20px', color: '#fff', fontSize: '1rem', 
             cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', 
