@@ -64,7 +64,6 @@ export default function Result() {
   };
 
   const cardRef = useRef(null);
-  const reportRef = useRef(null);
 
   const handleDownloadImage = async () => {
     if (!cardRef.current) return;
@@ -80,23 +79,6 @@ export default function Result() {
       link.click();
     } catch (err) {
       console.error('Error generating image:', err);
-    }
-  };
-
-  const handleDownloadReport = async () => {
-    if (!reportRef.current) return;
-    try {
-      const canvas = await html2canvas(reportRef.current, { 
-        backgroundColor: '#0b0d14',
-        scale: 2 
-      });
-      const dataUrl = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.download = `MBTY-FullReport-${user.nickname || 'Result'}.png`;
-      link.href = dataUrl;
-      link.click();
-    } catch (err) {
-      console.error('Error generating full report:', err);
     }
   };
 
@@ -166,18 +148,17 @@ export default function Result() {
         </div>
       </div>
 
-    <div ref={reportRef} style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
       {/* Action Bar (Buttons) */}
       <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '1rem' }}>
-        <button onClick={() => navigate('/')} className="upgrade-btn" style={{ padding: '12px 24px', fontSize: '1.1rem', background: '#3498db', color: 'white', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 5px 15px rgba(52, 152, 219, 0.3)' }}>
-          <span>🏠</span> กลับหน้าหลัก
+        <button onClick={() => navigate('/')} className="upgrade-btn" style={{ padding: '12px 28px', fontSize: '1.1rem', background: '#3498db', color: 'white', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.6rem', boxShadow: '0 5px 15px rgba(52, 152, 219, 0.3)', borderRadius: '50px' }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          กลับหน้าหลัก
         </button>
-        <button onClick={handleDownloadImage} className="upgrade-btn" style={{ padding: '12px 24px', fontSize: '1.1rem', background: '#2ecc71', color: '#111', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 5px 15px rgba(46, 204, 113, 0.3)' }}>
-          <span>📸</span> บันทึกเป็นรูป
-        </button>
-        <button onClick={handleDownloadReport} className="upgrade-btn" style={{ padding: '12px 24px', fontSize: '1.1rem', background: '#9b59b6', color: 'white', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 5px 15px rgba(155, 89, 182, 0.3)' }}>
-          <span>📑</span> บันทึกฉบับเต็ม
+        <button onClick={handleDownloadImage} className="upgrade-btn" style={{ padding: '12px 28px', fontSize: '1.1rem', background: '#2ecc71', color: '#111', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.6rem', boxShadow: '0 5px 15px rgba(46, 204, 113, 0.3)', borderRadius: '50px' }}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          โหลดรูป
         </button>
       </div>
 
