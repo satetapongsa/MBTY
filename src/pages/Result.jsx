@@ -64,6 +64,7 @@ export default function Result() {
   };
 
   const cardRef = useRef(null);
+  const reportRef = useRef(null);
 
   const handleDownloadImage = async () => {
     if (!cardRef.current) return;
@@ -82,8 +83,25 @@ export default function Result() {
     }
   };
 
+  const handleDownloadReport = async () => {
+    if (!reportRef.current) return;
+    try {
+      const canvas = await html2canvas(reportRef.current, { 
+        backgroundColor: '#0b0d14',
+        scale: 2 
+      });
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `MBTY-FullReport-${user.nickname || 'Result'}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Error generating full report:', err);
+    }
+  };
+
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div ref={reportRef} style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
       {/* Top Section: Character & Details */}
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
@@ -298,6 +316,13 @@ export default function Result() {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Export Buttons */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+          <button onClick={handleDownloadReport} className="upgrade-btn" style={{ padding: '15px 40px', fontSize: '1.2rem', background: '#9b59b6', color: 'white', fontWeight: 'bold', boxShadow: '0 10px 30px rgba(155, 89, 182, 0.4)' }}>
+            📑 บันทึกรายงานฉบับเต็ม (Infographic)
+          </button>
         </div>
 
       </div>
