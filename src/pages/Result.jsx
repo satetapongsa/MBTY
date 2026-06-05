@@ -101,14 +101,92 @@ export default function Result() {
   };
 
   return (
+    <>
+      {/* Hidden container for Horizontal Export */}
+      <div style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
+        <div ref={cardRef} style={{ width: '1200px', display: 'flex', gap: '2rem', background: '#0b0d14', padding: '3rem', borderRadius: '24px' }}>
+          {/* Left: Character Card */}
+          <div style={{ ...cardStyle, flex: 1, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h2 style={{ color: 'white', marginBottom: '1.5rem', fontSize: '1.2rem', letterSpacing: '2px', background: 'rgba(255,255,255,0.1)', padding: '5px 15px', borderRadius: '20px' }}>MBTY RESULT</h2>
+            <img src={character.image} alt={character.name} style={{ width: '250px', height: '250px', objectFit: 'cover', borderRadius: '16px', marginBottom: '1.5rem', border: '2px solid #2ecc71' }} />
+            <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>คุณคือ</div>
+            <h2 style={{ color: '#2ecc71', fontSize: '2rem', marginBottom: '1rem' }}>{character.name}</h2>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>{character.desc}</p>
+            <div style={{ display: 'flex', gap: '1rem', width: '100%', justifyContent: 'center' }}>
+              {topSkills.map((skill, index) => (
+                <div key={`exp-${skill.id}`} style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', flex: 1, border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{skill.icon}</div>
+                  <div style={{ fontSize: '0.8rem', color: skill.color, marginBottom: '0.5rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{skill.name.replace('ด้าน','')}</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: skill.color }}>{skill.score}%</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>อันดับ {index + 1}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: Skills & Donut */}
+          <div style={{ ...cardStyle, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h3 style={{ color: 'var(--text-muted)', marginBottom: '3rem', letterSpacing: '2px' }}>สัดส่วนพหุปัญญา 8 ด้าน</h3>
+            <div className="donut-chart" style={{ background: `conic-gradient(${conicStops})`, width: '250px', height: '250px', marginBottom: '2rem' }}>
+              <div className="donut-inner" style={{ width: '130px', height: '130px' }}>
+                <div className="donut-inner-text">พหุปัญญา</div>
+                <div className="donut-inner-sub">8 ด้าน</div>
+              </div>
+              {skills.map((skill) => {
+                 const startPercent = skills.slice(0, skills.indexOf(skill)).reduce((sum, s) => sum + (s.score / totalScore) * 100, 0);
+                 const percent = (skill.score / totalScore) * 100;
+                 const middlePercent = startPercent + (percent / 2);
+                 const angle = (middlePercent / 100) * 360;
+                 const radius = 95;
+                 const radians = (angle - 90) * (Math.PI / 180);
+                 const x = Math.cos(radians) * radius;
+                 const y = Math.sin(radians) * radius;
+                 return (
+                   <div key={`label-exp-${skill.id}`} style={{ position: 'absolute', transform: `translate(${x}px, ${y}px)`, color: 'white', fontSize: '11px', display: 'flex', flexDirection: 'column', alignItems: 'center', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>
+                     <span>{skill.icon}</span>
+                     <span style={{ fontWeight: 'bold' }}>{Math.round(percent)}%</span>
+                   </div>
+                 )
+              })}
+            </div>
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              {skills.map(skill => (
+                <div key={`bar-exp-${skill.id}`} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <span style={{ width: '140px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+                    <span style={{ fontSize: '1.1rem' }}>{skill.icon}</span> {skill.name}
+                  </span>
+                  <div style={{ flex: 1, height: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '5px', overflow: 'hidden' }}>
+                    <div style={{ width: `${skill.score}%`, backgroundColor: skill.color, height: '100%', borderRadius: '5px' }} />
+                  </div>
+                  <span style={{ width: '30px', textAlign: 'right', color: skill.color, fontWeight: 'bold', fontSize: '0.9rem' }}>{skill.score}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
     <div ref={reportRef} style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
+      {/* Action Bar (Buttons) */}
+      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '1rem' }}>
+        <button onClick={() => navigate('/')} className="upgrade-btn" style={{ padding: '12px 24px', fontSize: '1.1rem', background: '#3498db', color: 'white', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 5px 15px rgba(52, 152, 219, 0.3)' }}>
+          <span>🏠</span> กลับหน้าหลัก
+        </button>
+        <button onClick={handleDownloadImage} className="upgrade-btn" style={{ padding: '12px 24px', fontSize: '1.1rem', background: '#2ecc71', color: '#111', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 5px 15px rgba(46, 204, 113, 0.3)' }}>
+          <span>📸</span> บันทึกเป็นรูป
+        </button>
+        <button onClick={handleDownloadReport} className="upgrade-btn" style={{ padding: '12px 24px', fontSize: '1.1rem', background: '#9b59b6', color: 'white', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 5px 15px rgba(155, 89, 182, 0.3)' }}>
+          <span>📑</span> บันทึกฉบับเต็ม
+        </button>
+      </div>
+
       {/* Top Section: Character & Details */}
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
         
         {/* Left: Character Card */}
         <div style={{ display: 'flex', flexDirection: 'column', flex: '1 1 350px' }}>
-          <div ref={cardRef} style={{ ...cardStyle, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ ...cardStyle, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h2 style={{ color: 'white', marginBottom: '1.5rem', fontSize: '1.2rem', letterSpacing: '2px', background: 'rgba(255,255,255,0.1)', padding: '5px 15px', borderRadius: '20px' }}>MBTY RESULT</h2>
             <img src={character.image} alt={character.name} style={{ width: '250px', height: '250px', objectFit: 'cover', borderRadius: '16px', marginBottom: '1.5rem', border: '2px solid #2ecc71' }} />
             <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>คุณคือ</div>
@@ -125,15 +203,6 @@ export default function Result() {
                 </div>
               ))}
             </div>
-          </div>
-          
-          <div style={{ display: 'flex', gap: '1rem', width: '100%', marginTop: '1rem' }}>
-            <button onClick={handleDownloadImage} className="upgrade-btn" style={{ flex: 1, padding: '10px', fontSize: '1rem', background: '#2ecc71', color: '#111', fontWeight: 'bold' }}>
-              📸 บันทึกเป็นรูป
-            </button>
-            <button onClick={() => navigate('/')} className="upgrade-btn" style={{ flex: 1, padding: '10px', fontSize: '1rem', background: '#3498db' }}>
-              ← กลับหน้าหลัก
-            </button>
           </div>
         </div>
 
@@ -318,14 +387,10 @@ export default function Result() {
           </div>
         </div>
 
-        {/* Export Buttons */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
-          <button onClick={handleDownloadReport} className="upgrade-btn" style={{ padding: '15px 40px', fontSize: '1.2rem', background: '#9b59b6', color: 'white', fontWeight: 'bold', boxShadow: '0 10px 30px rgba(155, 89, 182, 0.4)' }}>
-            📑 บันทึกรายงานฉบับเต็ม (Infographic)
-          </button>
         </div>
 
       </div>
     </div>
+    </>
   );
 }
