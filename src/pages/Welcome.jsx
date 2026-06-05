@@ -43,7 +43,7 @@ export default function Welcome() {
       <div style={{ textAlign: 'center', marginBottom: '3rem', zIndex: 10, position: 'relative' }}>
         <h1 className="title-main" style={{ fontSize: '3rem', justifyContent: 'center' }}>ค้นหาพลังพหุปัญญาในตัวคุณ</h1>
         <div className="description" style={{ fontSize: '1.2rem', maxWidth: '100%', margin: '0 auto' }}>
-          สำรวจทั้ง 9 คาแรคเตอร์ที่ซ่อนอยู่ในตัวคุณ<br/>
+          สำรวจทั้ง {Object.keys(characters).length} คาแรคเตอร์ที่ซ่อนอยู่ในตัวคุณ<br/>
           {hasDoneTest ? (
             <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
               <button onClick={() => navigate('/result', { state: { user: localUser } })} className="upgrade-btn" style={{ padding: '10px 20px', fontSize: '1.1rem', background: '#3498db' }}>
