@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import html2canvas from 'html2canvas';
 import { characters, skillsList } from '../data/characters';
 import '../index.css';
 
@@ -62,6 +63,25 @@ export default function Result() {
     boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
   };
 
+  const cardRef = useRef(null);
+
+  const handleDownloadImage = async () => {
+    if (!cardRef.current) return;
+    try {
+      const canvas = await html2canvas(cardRef.current, { 
+        backgroundColor: '#131620',
+        scale: 2 // High quality
+      });
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `MBTY-${user.nickname || 'Result'}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Error generating image:', err);
+    }
+  };
+
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
@@ -69,26 +89,34 @@ export default function Result() {
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
         
         {/* Left: Character Card */}
-        <div style={{ ...cardStyle, flex: '1 1 350px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <img src={character.image} alt={character.name} style={{ width: '250px', height: '250px', objectFit: 'cover', borderRadius: '16px', marginBottom: '1.5rem', border: '2px solid #2ecc71' }} />
-          <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>คุณคือ</div>
-          <h2 style={{ color: '#2ecc71', fontSize: '2rem', marginBottom: '1rem' }}>{character.name}</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>{character.desc}</p>
-          
-          <div style={{ display: 'flex', gap: '1rem', width: '100%', justifyContent: 'center' }}>
-            {topSkills.map((skill, index) => (
-              <div key={skill.id} style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', flex: 1, border: '1px solid rgba(255,255,255,0.05)' }}>
-                <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{skill.icon}</div>
-                <div style={{ fontSize: '0.8rem', color: skill.color, marginBottom: '0.5rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{skill.name.replace('ด้าน','')}</div>
-                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: skill.color }}>{skill.score}%</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>อันดับ {index + 1}</div>
-              </div>
-            ))}
+        <div style={{ display: 'flex', flexDirection: 'column', flex: '1 1 350px' }}>
+          <div ref={cardRef} style={{ ...cardStyle, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <h2 style={{ color: 'white', marginBottom: '1.5rem', fontSize: '1.2rem', letterSpacing: '2px', background: 'rgba(255,255,255,0.1)', padding: '5px 15px', borderRadius: '20px' }}>MBTY RESULT</h2>
+            <img src={character.image} alt={character.name} style={{ width: '250px', height: '250px', objectFit: 'cover', borderRadius: '16px', marginBottom: '1.5rem', border: '2px solid #2ecc71' }} />
+            <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>คุณคือ</div>
+            <h2 style={{ color: '#2ecc71', fontSize: '2rem', marginBottom: '1rem' }}>{character.name}</h2>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>{character.desc}</p>
+            
+            <div style={{ display: 'flex', gap: '1rem', width: '100%', justifyContent: 'center' }}>
+              {topSkills.map((skill, index) => (
+                <div key={skill.id} style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', flex: 1, border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{skill.icon}</div>
+                  <div style={{ fontSize: '0.8rem', color: skill.color, marginBottom: '0.5rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{skill.name.replace('ด้าน','')}</div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: skill.color }}>{skill.score}%</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.5rem' }}>อันดับ {index + 1}</div>
+                </div>
+              ))}
+            </div>
           </div>
           
-          <button onClick={() => navigate('/')} className="upgrade-btn" style={{ marginTop: '2rem', padding: '10px 20px', fontSize: '1rem', background: '#3498db', width: '100%' }}>
-            ← กลับหน้าหลัก
-          </button>
+          <div style={{ display: 'flex', gap: '1rem', width: '100%', marginTop: '1rem' }}>
+            <button onClick={handleDownloadImage} className="upgrade-btn" style={{ flex: 1, padding: '10px', fontSize: '1rem', background: '#2ecc71', color: '#111', fontWeight: 'bold' }}>
+              📸 บันทึกเป็นรูป
+            </button>
+            <button onClick={() => navigate('/')} className="upgrade-btn" style={{ flex: 1, padding: '10px', fontSize: '1rem', background: '#3498db' }}>
+              ← กลับหน้าหลัก
+            </button>
+          </div>
         </div>
 
         {/* Right: Personality, Strengths, Careers */}

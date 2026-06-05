@@ -6,9 +6,16 @@ export default function Welcome() {
   const [name, setName] = useState('');
   const [localUser, setLocalUser] = useState(null);
   const [selectedChar, setSelectedChar] = useState(null);
+  const [stats, setStats] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
+    fetch('/api/stats')
+      .then(res => res.json())
+      .then(data => setStats(data))
+      .catch(err => console.error('Error fetching stats:', err));
+      
+
     const saved = localStorage.getItem('mbti_user');
     if (saved) {
       try {
@@ -91,6 +98,33 @@ export default function Welcome() {
           </div>
         ))}
       </div>
+
+      {/* Global Statistics */}
+      {hasDoneTest && stats && stats.total > 0 && (
+        <div style={{ marginTop: '5rem', textAlign: 'center', maxWidth: '800px', margin: '5rem auto 2rem', padding: '2rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '24px', border: '1px solid rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)' }}>
+          <h2 style={{ color: '#2ecc71', marginBottom: '1rem', fontSize: '2rem' }}>🌍 สถิติพหุปัญญาระดับโลก</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', marginBottom: '2rem' }}>
+            จากผู้เข้าร่วมทดสอบทั้งหมด <strong style={{ color: 'white', fontSize: '1.5rem' }}>{stats.total}</strong> คน
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
+            {stats.distribution.sort((a, b) => b.count - a.count).slice(0, 5).map((stat, i) => {
+              const charInfo = Object.values(characters).find(c => c.key === stat.character_key);
+              if (!charInfo) return null;
+              const percentage = ((stat.count / stats.total) * 100).toFixed(1);
+              return (
+                <div key={i} style={{ background: 'rgba(0,0,0,0.3)', padding: '1rem', borderRadius: '12px', minWidth: '150px', border: '1px solid #333' }}>
+                  <img src={charInfo.image} style={{ width: '50px', height: '50px', borderRadius: '50%', marginBottom: '0.5rem', objectFit: 'cover' }} />
+                  <div style={{ color: 'white', fontWeight: 'bold' }}>{charInfo.name}</div>
+                  <div style={{ color: '#3498db', fontSize: '1.5rem', marginTop: '0.5rem' }}>{percentage}%</div>
+                </div>
+              );
+            })}
+          </div>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '1.5rem' }}>
+            *แสดง 5 อันดับคาแรคเตอร์ที่พบมากที่สุด
+          </p>
+        </div>
+      )}
 
       {/* Overlay Modal if not done */}
       {!hasDoneTest && (

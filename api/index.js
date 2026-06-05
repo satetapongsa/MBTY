@@ -74,6 +74,32 @@ app.post('/api/users', async (req, res) => {
   }
 });
 
+app.get('/api/stats', async (req, res) => {
+  if (pool) {
+    try {
+      const result = await pool.query('SELECT character_key, COUNT(*) as count FROM users GROUP BY character_key');
+      const totalResult = await pool.query('SELECT COUNT(*) as total FROM users');
+      res.json({
+        total: parseInt(totalResult.rows[0].total),
+        distribution: result.rows
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Database error' });
+    }
+  } else {
+    const total = mockDb.length;
+    const distribution = {};
+    mockDb.forEach(u => {
+      distribution[u.character_key] = (distribution[u.character_key] || 0) + 1;
+    });
+    res.json({
+      total,
+      distribution: Object.keys(distribution).map(k => ({ character_key: k, count: distribution[k] }))
+    });
+  }
+});
+
 app.get('/api/users', async (req, res) => {
   if (pool) {
     try {
