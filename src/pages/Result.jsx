@@ -386,9 +386,6 @@ export default function Result() {
             </div>
           </div>
         </div>
-
-        </div>
-
       </div>
     </div>
     </>

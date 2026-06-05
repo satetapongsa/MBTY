@@ -242,6 +242,7 @@ export default function Quiz() {
           </button>
         )}
       </div>
+      </div>
     </div>
   );
 }
