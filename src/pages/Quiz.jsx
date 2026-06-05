@@ -30,9 +30,27 @@ export default function Quiz() {
       // Submit
       setIsSubmitting(true);
       
+      // Calculate average score per skill
+      const skillSums = {};
+      const skillCounts = {};
+      
+      skillsList.forEach(s => {
+        skillSums[s.id] = 0;
+        skillCounts[s.id] = 0;
+      });
+
+      Object.keys(newAnswers).forEach(ansQId => {
+        const q = questions.find(x => x.id === ansQId);
+        if (q) {
+          skillSums[q.skill] += newAnswers[ansQId];
+          skillCounts[q.skill] += 1;
+        }
+      });
+
       const finalSkills = {};
       skillsList.forEach(s => {
-        finalSkills[s.id] = 20 + Math.floor((newAnswers[s.id] || 0) * 0.8);
+        const avg = skillCounts[s.id] > 0 ? (skillSums[s.id] / skillCounts[s.id]) : 0;
+        finalSkills[s.id] = 20 + Math.floor(avg * 0.8);
       });
 
       let maxScore = -1;
@@ -48,7 +66,15 @@ export default function Quiz() {
       }
       
       let character_key = topTrait;
-      if (allHigh) character_key = 'hybrid';
+      
+      // Combo Characters Logic
+      const isHigh = (s1, s2) => finalSkills[s1] >= 75 && finalSkills[s2] >= 75;
+      
+      if (isHigh('interpersonal', 'linguistic')) character_key = 'visionary';
+      else if (isHigh('logical', 'spatial')) character_key = 'inventor';
+      else if (isHigh('musical', 'bodily')) character_key = 'performer';
+      else if (isHigh('intrapersonal', 'naturalist')) character_key = 'sage';
+      else if (allHigh) character_key = 'hybrid';
 
       try {
         const res = await fetch('/api/users', {
@@ -99,16 +125,22 @@ export default function Quiz() {
       {currentQ > 0 && (
         <button 
           onClick={handleBack}
-          style={{ position: 'absolute', top: '2rem', left: '2rem', background: 'transparent', border: 'none', color: '#8b92a5', fontSize: '1.2rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', transition: 'color 0.2s' }}
-          onMouseEnter={(e) => e.target.style.color = '#fff'}
-          onMouseLeave={(e) => e.target.style.color = '#8b92a5'}
+          style={{ 
+            position: 'absolute', top: '2rem', left: '2rem', 
+            background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', 
+            borderRadius: '50px', padding: '8px 20px', color: '#fff', fontSize: '1rem', 
+            cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', 
+            transition: 'all 0.3s ease', backdropFilter: 'blur(10px)', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' 
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'; e.currentTarget.style.transform = 'translateY(0)'; }}
         >
-          ← ย้อนกลับ
+          <span style={{ fontSize: '1.2rem' }}>←</span> ย้อนกลับ
         </button>
       )}
 
       <div className="right-panel" style={{ width: '100%', maxWidth: '700px', textAlign: 'center' }}>
-        <h2 style={{ marginBottom: '2rem', color: 'var(--text-muted)' }}>คำถามที่ {currentQ + 1} / 8</h2>
+        <h2 style={{ marginBottom: '2rem', color: 'var(--text-muted)' }}>คำถามที่ {currentQ + 1} / {questions.length}</h2>
         <h3 style={{ fontSize: '1.6rem', marginBottom: '3rem', lineHeight: '1.5' }}>
           {questions[currentQ].text}
         </h3>
