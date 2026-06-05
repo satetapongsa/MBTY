@@ -2,6 +2,29 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { characters, skillsList } from '../data/characters';
 
+// Simple Animated Number Component
+function AnimatedNumber({ value, isFloat = false, suffix = '', duration = 1500 }) {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      // easeOut function
+      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      setCurrent(value * ease);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  }, [value, duration]);
+
+  const displayVal = isFloat ? current.toFixed(1) : Math.floor(current).toLocaleString();
+  return <span>{displayVal}{suffix}</span>;
+}
+
 export default function Welcome() {
   const [name, setName] = useState('');
   const [localUser, setLocalUser] = useState(null);
@@ -67,25 +90,39 @@ export default function Welcome() {
       </div>
 
       {/* Global Statistics */}
-      {hasDoneTest && stats && stats.total > 0 && (
+      {hasDoneTest && (
         <div style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 4rem', padding: '2rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '24px', border: '1px solid rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)' }}>
           <h2 style={{ color: '#2ecc71', marginBottom: '0.5rem', fontSize: '1.5rem' }}>🌍 5 อันดับคาแรคเตอร์ที่พบมากที่สุด</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '1rem', marginBottom: '2rem' }}>
-            จากผู้เข้าร่วมทดสอบทั้งหมด <strong style={{ color: 'white' }}>{stats.total.toLocaleString()}</strong> คน
+            จากผู้เข้าร่วมทดสอบทั้งหมด <strong style={{ color: 'white' }}>
+              {stats ? <AnimatedNumber value={stats.total} /> : '...'}
+            </strong> คน
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'center' }}>
-            {stats.distribution.sort((a, b) => b.count - a.count).slice(0, 5).map((stat, i) => {
-              const charInfo = Object.values(characters).find(c => c.key === stat.character_key);
-              if (!charInfo) return null;
-              const percentage = ((stat.count / stats.total) * 100).toFixed(1);
-              return (
-                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <img src={charInfo.image} style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '0.8rem', objectFit: 'cover', border: '3px solid #3498db', boxShadow: '0 5px 15px rgba(52, 152, 219, 0.4)' }} />
-                  <div style={{ color: 'white', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.3rem' }}>{charInfo.name}</div>
-                  <div style={{ color: '#3498db', fontSize: '1.2rem', fontWeight: 'bold' }}>{percentage}%</div>
+            {!stats ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <div key={`skel-${i}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0.5 }}>
+                  <div style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '0.8rem', background: 'rgba(255,255,255,0.1)' }} />
+                  <div style={{ width: '60px', height: '14px', background: 'rgba(255,255,255,0.1)', borderRadius: '7px', marginBottom: '0.5rem' }} />
+                  <div style={{ width: '40px', height: '20px', background: 'rgba(255,255,255,0.1)', borderRadius: '10px' }} />
                 </div>
-              );
-            })}
+              ))
+            ) : (
+              stats.distribution.sort((a, b) => b.count - a.count).slice(0, 5).map((stat, i) => {
+                const charInfo = Object.values(characters).find(c => c.key === stat.character_key);
+                if (!charInfo) return null;
+                const percentage = (stat.count / stats.total) * 100;
+                return (
+                  <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <img src={charInfo.image} style={{ width: '80px', height: '80px', borderRadius: '50%', marginBottom: '0.8rem', objectFit: 'cover', border: '3px solid #3498db', boxShadow: '0 5px 15px rgba(52, 152, 219, 0.4)' }} />
+                    <div style={{ color: 'white', fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '0.3rem' }}>{charInfo.name}</div>
+                    <div style={{ color: '#3498db', fontSize: '1.2rem', fontWeight: 'bold' }}>
+                      <AnimatedNumber value={percentage} isFloat={true} suffix="%" />
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       )}
