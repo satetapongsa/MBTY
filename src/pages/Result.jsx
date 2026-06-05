@@ -86,7 +86,7 @@ export default function Result() {
     <>
       {/* Hidden container for 16:9 Full Infographic Export */}
       <div style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
-        <div ref={cardRef} style={{ width: '1920px', height: '1080px', display: 'flex', gap: '2.5rem', background: '#0b0d14', padding: '3.5rem', boxSizing: 'border-box', position: 'relative' }}>
+        <div ref={cardRef} style={{ width: '1920px', minHeight: '1080px', height: 'max-content', display: 'flex', gap: '2.5rem', background: '#0b0d14', padding: '3.5rem', boxSizing: 'border-box', position: 'relative' }}>
           
           {/* Col 1: Character Identity */}
           <div style={{ ...cardStyle, width: '480px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '2.5rem' }}>
