@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { characters, skillsList } from '../data/characters';
 import '../index.css';
 
@@ -108,27 +109,13 @@ export default function Result() {
               ))}
             </div>
 
-            <div className="donut-chart" style={{ background: `conic-gradient(${conicStops})`, width: '280px', height: '280px', margin: '1rem auto 0' }}>
-              <div className="donut-inner" style={{ width: '150px', height: '150px' }}>
-                <div className="donut-inner-text" style={{ fontSize: '1rem' }}>พหุปัญญา</div>
-                <div className="donut-inner-sub" style={{ fontSize: '1.5rem' }}>8 ด้าน</div>
-              </div>
-              {skills.map((skill) => {
-                 const startPercent = skills.slice(0, skills.indexOf(skill)).reduce((sum, s) => sum + (s.score / totalScore) * 100, 0);
-                 const percent = (skill.score / totalScore) * 100;
-                 const middlePercent = startPercent + (percent / 2);
-                 const angle = (middlePercent / 100) * 360;
-                 const radius = 105;
-                 const radians = (angle - 90) * (Math.PI / 180);
-                 const x = Math.cos(radians) * radius;
-                 const y = Math.sin(radians) * radius;
-                 return (
-                   <div key={`label-exp-${skill.id}`} style={{ position: 'absolute', transform: `translate(${x}px, ${y}px)`, color: 'white', fontSize: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
-                     <span style={{ fontSize: '1.2rem' }}>{skill.icon}</span>
-                     <span style={{ fontWeight: 'bold' }}>{Math.round(percent)}%</span>
-                   </div>
-                 )
-              })}
+            <div style={{ width: '280px', height: '280px', margin: '1rem auto 0' }}>
+              <RadarChart cx="50%" cy="50%" outerRadius="65%" width={280} height={280} data={skills.map(s => ({ subject: s.name.replace('ด้าน',''), score: s.score }))}>
+                <PolarGrid stroke="rgba(255,255,255,0.15)" />
+                <PolarAngleAxis dataKey="subject" tick={{ fill: '#8b92a5', fontSize: 10, fontWeight: 'bold' }} />
+                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                <Radar name="Skills" dataKey="score" stroke="#2ecc71" strokeWidth={2} fill="#2ecc71" fillOpacity={0.5} isAnimationActive={false} />
+              </RadarChart>
             </div>
           </div>
 
@@ -365,29 +352,15 @@ export default function Result() {
       <div style={{ ...cardStyle, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <h3 style={{ color: 'var(--text-muted)', marginBottom: '3rem', letterSpacing: '2px' }}>สัดส่วนพหุปัญญา 8 ด้าน</h3>
         
-        <div className="donut-chart" style={{ background: `conic-gradient(${conicStops})`, width: '300px', height: '300px', marginBottom: '3rem' }}>
-          <div className="donut-inner" style={{ width: '160px', height: '160px' }}>
-            <div className="donut-inner-text">พหุปัญญา</div>
-            <div className="donut-inner-sub">8 ด้าน</div>
-          </div>
-          {skills.map((skill) => {
-             const startPercent = skills.slice(0, skills.indexOf(skill)).reduce((sum, s) => sum + (s.score / totalScore) * 100, 0);
-             const percent = (skill.score / totalScore) * 100;
-             const middlePercent = startPercent + (percent / 2);
-             const angle = (middlePercent / 100) * 360;
-             const radius = 110;
-             const radians = (angle - 90) * (Math.PI / 180);
-             const x = Math.cos(radians) * radius;
-             const y = Math.sin(radians) * radius;
-             return (
-               <div key={`label-${skill.id}`} style={{
-                 position: 'absolute', transform: `translate(${x}px, ${y}px)`, color: 'white', fontSize: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', textShadow: '0 1px 3px rgba(0,0,0,0.8)'
-               }}>
-                 <span>{skill.icon}</span>
-                 <span style={{ fontWeight: 'bold' }}>{Math.round(percent)}%</span>
-               </div>
-             )
-          })}
+        <div style={{ width: '100%', height: '350px', marginBottom: '3rem' }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <RadarChart cx="50%" cy="50%" outerRadius="70%" data={skills.map(s => ({ subject: s.name.replace('ด้าน',''), score: s.score }))}>
+              <PolarGrid stroke="rgba(255,255,255,0.15)" />
+              <PolarAngleAxis dataKey="subject" tick={{ fill: '#8b92a5', fontSize: 13, fontWeight: 'bold' }} />
+              <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+              <Radar name="Skills" dataKey="score" stroke="#2ecc71" strokeWidth={3} fill="#2ecc71" fillOpacity={0.6} />
+            </RadarChart>
+          </ResponsiveContainer>
         </div>
 
         <div style={{ width: '100%', maxWidth: '800px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
