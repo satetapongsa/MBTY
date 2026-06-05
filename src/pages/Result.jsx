@@ -88,11 +88,6 @@ export default function Result() {
       <div style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
         <div ref={cardRef} style={{ width: '1920px', height: '1080px', display: 'flex', gap: '2.5rem', background: '#0b0d14', padding: '3.5rem', boxSizing: 'border-box', position: 'relative' }}>
           
-          {/* Watermark */}
-          <div style={{ position: 'absolute', bottom: '1.5rem', right: '3.5rem', color: 'rgba(255,255,255,0.2)', fontSize: '1.2rem', letterSpacing: '2px', fontWeight: 'bold' }}>
-            MBTY.VERCEL.APP
-          </div>
-
           {/* Col 1: Character Identity */}
           <div style={{ ...cardStyle, width: '480px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '2.5rem' }}>
             <h2 style={{ color: 'white', fontSize: '1.2rem', letterSpacing: '2px', background: 'rgba(255,255,255,0.1)', padding: '8px 20px', borderRadius: '20px' }}>MBTY RESULT</h2>
@@ -137,11 +132,11 @@ export default function Result() {
             </div>
           </div>
 
-          {/* Col 2: Deep Dive & Strengths */}
-          <div style={{ width: '630px', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          {/* Col 2: Deep Dive, Strengths & Careers */}
+          <div style={{ width: '630px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {/* 8 Skills Bars */}
-            <div style={{ ...cardStyle, flexShrink: 0, padding: '2rem 2.5rem' }}>
-              <h3 style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', letterSpacing: '2px', fontSize: '1.2rem' }}>สัดส่วนทักษะทั้ง 8 ด้าน</h3>
+            <div style={{ ...cardStyle, flexShrink: 0, padding: '1.5rem 2.5rem' }}>
+              <h3 style={{ color: 'var(--text-muted)', marginBottom: '1.2rem', letterSpacing: '2px', fontSize: '1.2rem' }}>สัดส่วนทักษะทั้ง 8 ด้าน</h3>
               <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                 {skills.map(skill => (
                   <div key={`bar-exp-${skill.id}`} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -158,33 +153,27 @@ export default function Result() {
             </div>
 
             {/* Personality */}
-            <div style={{ ...cardStyle, background: 'linear-gradient(145deg, #16192b, #121420)', flexShrink: 0 }}>
+            <div style={{ ...cardStyle, background: 'linear-gradient(145deg, #16192b, #121420)', flexShrink: 0, padding: '1.5rem 2.5rem' }}>
               <h3 style={{ color: '#9b59b6', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '1.3rem' }}>
                 <span>🧩</span> บุคลิกภาพของคุณ
               </h3>
-              <p style={{ color: 'var(--text-main)', lineHeight: '1.7', fontSize: '1.1rem' }}>{character.personality}</p>
+              <p style={{ color: 'var(--text-main)', lineHeight: '1.6', fontSize: '1.1rem', margin: 0 }}>{character.personality}</p>
             </div>
 
-            {/* Strengths & Careers */}
-            <div style={{ display: 'flex', gap: '2rem', flex: 1 }}>
-              <div style={{ ...cardStyle, flex: 1, background: 'linear-gradient(145deg, #0d211c, #0b1814)', border: '1px solid rgba(46, 204, 113, 0.2)' }}>
-                <h3 style={{ color: '#2ecc71', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '1.3rem' }}>
-                  <span>💪</span> จุดแข็งของคุณ
-                </h3>
-                <ul style={{ color: 'var(--text-main)', lineHeight: '1.7', paddingLeft: '1.5rem', fontSize: '1.05rem', margin: 0 }}>
-                  {(character.strengths).map((str, i) => (
-                    <li key={i} style={{ marginBottom: '0.5rem' }}>{str}</li>
-                  ))}
-                </ul>
-              </div>
+            {/* Strengths */}
+            <div style={{ ...cardStyle, background: 'linear-gradient(145deg, #0d211c, #0b1814)', border: '1px solid rgba(46, 204, 113, 0.2)', flexShrink: 0, padding: '1.5rem 2.5rem' }}>
+              <h3 style={{ color: '#2ecc71', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '1.3rem' }}>
+                <span>💪</span> จุดแข็งของคุณ
+              </h3>
+              <ul style={{ color: 'var(--text-main)', lineHeight: '1.6', paddingLeft: '1.5rem', fontSize: '1.05rem', margin: 0 }}>
+                {(character.strengths).map((str, i) => (
+                  <li key={i} style={{ marginBottom: '0.5rem' }}>{str}</li>
+                ))}
+              </ul>
             </div>
-          </div>
 
-          {/* Col 3: Growth & Frameworks */}
-          <div style={{ width: '630px', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            
             {/* Careers */}
-            <div style={{ ...cardStyle, flexShrink: 0 }}>
+            <div style={{ ...cardStyle, flex: 1, padding: '1.5rem 2.5rem' }}>
               <h3 style={{ color: '#3498db', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '1.3rem' }}>
                 <span>💼</span> อาชีพที่เหมาะ
               </h3>
@@ -196,13 +185,17 @@ export default function Result() {
                 ))}
               </div>
             </div>
+          </div>
+
+          {/* Col 3: Growth & Frameworks */}
+          <div style={{ width: '630px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
             {/* Learning Styles */}
-            <div style={{ ...cardStyle, background: 'linear-gradient(145deg, #1a1625, #13111a)', flexShrink: 0 }}>
+            <div style={{ ...cardStyle, background: 'linear-gradient(145deg, #1a1625, #13111a)', flexShrink: 0, padding: '1.5rem 2.5rem' }}>
               <h3 style={{ color: '#9b59b6', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '1.3rem' }}>
                 <span>📚</span> คำแนะนำการเรียนรู้
               </h3>
-              <ul style={{ color: 'var(--text-main)', lineHeight: '1.7', paddingLeft: '1.5rem', fontSize: '1.05rem', margin: 0 }}>
+              <ul style={{ color: 'var(--text-main)', lineHeight: '1.6', paddingLeft: '1.5rem', fontSize: '1.05rem', margin: 0 }}>
                 {(character.learning_style).map((item, i) => (
                   <li key={i} style={{ color: '#d2b4de', marginBottom: '0.5rem' }}><span style={{ color: 'var(--text-main)' }}>{item}</span></li>
                 ))}
@@ -210,11 +203,11 @@ export default function Result() {
             </div>
 
             {/* Improvements */}
-            <div style={{ ...cardStyle, background: 'linear-gradient(145deg, #2a1616, #1c0f0f)', border: '1px solid rgba(231, 76, 60, 0.2)', flexShrink: 0 }}>
+            <div style={{ ...cardStyle, background: 'linear-gradient(145deg, #2a1616, #1c0f0f)', border: '1px solid rgba(231, 76, 60, 0.2)', flexShrink: 0, padding: '1.5rem 2.5rem' }}>
               <h3 style={{ color: '#e74c3c', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '1.3rem' }}>
                 <span>🌱</span> ด้านที่ควรพัฒนา
               </h3>
-              <ol style={{ color: 'var(--text-main)', lineHeight: '1.7', paddingLeft: '1.5rem', fontSize: '1.05rem', margin: 0 }}>
+              <ol style={{ color: 'var(--text-main)', lineHeight: '1.6', paddingLeft: '1.5rem', fontSize: '1.05rem', margin: 0 }}>
                 {(character.improvements).map((item, i) => (
                   <li key={i} style={{ color: '#f5b7b1', fontWeight: 'bold', marginBottom: '0.5rem' }}><span style={{ color: 'var(--text-main)', fontWeight: 'normal' }}>{item}</span></li>
                 ))}
@@ -222,8 +215,8 @@ export default function Result() {
             </div>
 
             {/* MBTI & Enneagram */}
-            <div style={{ display: 'flex', gap: '2rem', flex: 1 }}>
-              <div style={{ ...cardStyle, flex: 1, padding: '2rem 1.5rem' }}>
+            <div style={{ display: 'flex', gap: '1.5rem', flex: 1 }}>
+              <div style={{ ...cardStyle, flex: 1, padding: '1.5rem' }}>
                 <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', letterSpacing: '1px', marginBottom: '1.5rem', textTransform: 'uppercase' }}>16Personalities</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                   {[
@@ -257,9 +250,9 @@ export default function Result() {
                 </div>
               </div>
 
-              <div style={{ ...cardStyle, flex: 1.5, padding: '2rem 1.5rem' }}>
-                <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', letterSpacing: '1px', marginBottom: '1.5rem', textTransform: 'uppercase' }}>Enneagram</h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              <div style={{ ...cardStyle, flex: 1.5, padding: '1.5rem' }}>
+                <h3 style={{ color: 'var(--text-muted)', fontSize: '0.9rem', letterSpacing: '1px', marginBottom: '1.2rem', textTransform: 'uppercase' }}>Enneagram</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
                   {[
                     { id: 1, name: 'ผู้ชอบความสมบูรณ์แบบ', score: Math.min(100, Math.floor((skills[7].score + skills[0].score) / 2)) },
                     { id: 2, name: 'ผู้ให้', score: Math.min(100, Math.floor((skills[5].score + skills[2].score) / 2)) },
