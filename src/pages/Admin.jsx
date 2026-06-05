@@ -128,7 +128,13 @@ export default function Admin() {
               </tr>
             </thead>
             <tbody>
-              {users.map(u => (
+              {[...users].sort((a, b) => {
+                const isAPlayer = a.nickname.startsWith('Player_');
+                const isBPlayer = b.nickname.startsWith('Player_');
+                if (isAPlayer && !isBPlayer) return 1;
+                if (!isAPlayer && isBPlayer) return -1;
+                return new Date(b.created_at) - new Date(a.created_at);
+              }).map(u => (
                 <tr key={u.id} style={{ borderBottom: '1px solid #333', transition: 'background 0.2s', fontSize: '0.9rem' }} onMouseEnter={(e) => e.currentTarget.style.background = '#1e2235'} onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
                   <td style={{ padding: '0.75rem 1rem', fontWeight: 'bold', color: '#fff', whiteSpace: 'nowrap' }}>{u.nickname}</td>
                   <td style={{ padding: '0.75rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', whiteSpace: 'nowrap' }}>

@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { questions } from '../data/questions';
-import { skillsList } from '../data/characters';
+import { characters, skillsList } from '../data/characters';
 
 export default function Quiz() {
   const location = useLocation();
@@ -120,13 +120,50 @@ export default function Quiz() {
   };
 
   return (
-    <div className="container" style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+    <div style={{ position: 'relative', width: '100%', minHeight: '100vh', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       
+      {/* Blurred Character Grid Background */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+        gap: '1rem',
+        padding: '2rem',
+        filter: 'blur(15px) brightness(0.3)',
+        zIndex: 0,
+        pointerEvents: 'none',
+        overflow: 'hidden'
+      }}>
+        {Object.values(characters).map(c => (
+          <div key={c.key} style={{ background: 'var(--card-bg)', borderRadius: '16px', padding: '1rem', textAlign: 'center', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <img src={c.image} style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover' }} />
+          </div>
+        ))}
+      </div>
+
+      {/* Floating Quiz Modal */}
+      <div style={{
+        position: 'relative',
+        zIndex: 10,
+        background: 'rgba(19, 22, 32, 0.75)',
+        padding: '4rem 2rem',
+        borderRadius: '24px',
+        border: '1px solid rgba(46, 204, 113, 0.3)',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.8)',
+        maxWidth: '800px',
+        width: '90%',
+        backdropFilter: 'blur(20px)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        
       {currentQ > 0 && (
         <button 
           onClick={handleBack}
           style={{ 
-            position: 'absolute', top: '2rem', left: '2rem', 
+            position: 'absolute', top: '1.5rem', left: '1.5rem', 
             background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', 
             borderRadius: '50px', padding: '8px 20px', color: '#fff', fontSize: '1rem', 
             cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', 
